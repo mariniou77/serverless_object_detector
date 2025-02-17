@@ -24,9 +24,20 @@ def extract_frames(video_path, output_dir, interval_sec=1):
     return frames
 
 if __name__ == "__main__":
-    # Example: Extract frames from input_video.mp4 every 1 second
-    video_path = "input_videos/sample.mp4"
+    video_path = "input_videos/test_video.mp4"  # Replace with your video
     output_dir = "output/extracted_frames"
     os.makedirs(output_dir, exist_ok=True)
+
+    # Extract frames and target_objects
     frames = extract_frames(video_path, output_dir)
-    print(json.dumps({"frames": frames, "target_objects": ["bus", "dog"]}))
+    output_data = {
+        "frames": [os.path.abspath(frame) for frame in frames],  # Use absolute paths
+        "target_objects": ["human"]  # Or read from input JSON
+    }
+
+    # Save output to JSON
+    output_json_path = "output/extracted_frames.json"
+    with open(output_json_path, "w") as f:
+        json.dump(output_data, f)
+
+    print(f"Frame extraction complete. Output: {output_json_path}")
