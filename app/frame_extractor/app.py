@@ -32,7 +32,7 @@ if __name__ == "__main__":
     frames = extract_frames(video_path, output_dir)
     output_data = {
         "frames": [os.path.abspath(frame) for frame in frames],  # Use absolute paths
-        "target_objects": ["human"]  # Or read from input JSON
+        "target_objects": ["person", "car", "surfboard", "tower"]  # Or read from input JSON
     }
 
     # Save output to JSON
