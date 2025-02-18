@@ -29,15 +29,47 @@ def detect_objects(frame_paths, output_dir, target_objects=[]):
 
     return output_path
 
+def handler(event, context):
+    """
+    AWS Lambda handler for the object detector step.
+    Expects an event dict like:
+    {
+      'frames': [...list of frame paths...],
+      'target_objects': [...objects to filter...]
+    }
+    """
+    # 1. Extract info from event
+    frame_paths = event.get("frames", [])
+    target_objects = event.get("target_objects", [])
+    output_dir = "output/detections"
+    os.makedirs(output_dir, exist_ok=True)
+
+    # 2. Run the detection
+    detection_output_path = detect_objects(frame_paths, output_dir, target_objects)
+
+    # 3. Package the final JSON (read back detections.json or re-create it)
+    with open(detection_output_path, "r") as f:
+        detection_data = json.load(f)
+
+    # 4. Return result in Lambda style
+    return {
+        "statusCode": 200,
+        "body": json.dumps(detection_data)
+    }
+
+# Optional: local testing without Lambda
 if __name__ == "__main__":
-    # Read input from the unique_frames.json
+    # Read input from the local JSON if desired
     input_json_path = "output/unique_frames.json"
     with open(input_json_path, "r") as f:
         input_data = json.load(f)
 
     frame_paths = input_data["frames"]
     target_objects = input_data.get("target_objects", [])
-    output_dir = "output/detections"
-    os.makedirs(output_dir, exist_ok=True)
+    event_mock = {
+        "frames": frame_paths,
+        "target_objects": target_objects
+    }
 
-    detect_objects(frame_paths, output_dir, target_objects)
+    response = handler(event_mock, None)
+    print("Local run response:", response)

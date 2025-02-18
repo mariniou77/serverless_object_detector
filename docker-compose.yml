@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  frame_extractor:
+    build: ./app/frame_extractor
+    container_name: frame_extractor
+    ports:
+      - '9001:8080'  # We'll invoke the first function on port 9001
+    networks:
+      - lambda_network
+
+  redundancy_remover:
+    build: ./app/redundancy_remover
+    container_name: redundancy_remover
+    ports:
+      - '9002:8080'  # We'll invoke the second function on port 9002
+    networks:
+      - lambda_network
+
+  object_detector:
+    build: ./app/object_detector
+    container_name: object_detector
+    ports:
+      - '9003:8080'  # We'll invoke the third function on port 9003
+    networks:
+      - lambda_network
+
+networks:
+  lambda_network:
+    driver: bridge
