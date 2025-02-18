@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  frame_extractor:
+    build: .
+    container_name: frame_extractor
+    command: python app/frame_extractor/app.py
+    volumes:
+      - ./local_s3_bucket:/app/local_s3_bucket
+    environment:
+      - LOCAL_MODE=1
+
+  redundancy_remover:
+    build: .
+    container_name: redundancy_remover
+    command: python app/redundancy_remover/app.py
+    volumes:
+      - ./local_s3_bucket:/app/local_s3_bucket
+    environment:
+      - LOCAL_MODE=1
+
+  object_detector:
+    build: .
+    container_name: object_detector
+    command: python app/object_detector/app.py
+    volumes:
+      - ./local_s3_bucket:/app/local_s3_bucket
+    environment:
+      - LOCAL_MODE=1
