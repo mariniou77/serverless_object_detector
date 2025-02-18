@@ -1,2 +1,4 @@
 /.env
 /yolov8n.pt
+/local_s3_bucket
+/output
