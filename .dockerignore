@@ -1,0 +1,10 @@
+# 1. Ignore Git metadata
+.git
+
+# 2. Ignore Python cache & compiled artifacts
+__pycache__/
+*.pyc
+*.pyo
+
+# 3. Ignore environment files (secrets/credentials)
+.env
